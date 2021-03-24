@@ -4,66 +4,9 @@ A small and clear auth management method for developer team.
 
 ## prototype
 
-```puml
-@startuml
-'https://plantuml.com/use-case-diagram
+![use-case](use-case.png)
 
-:Stuff:
-:Leader:
-:Audit Bot: as AB
-:Operator:
-:Auth Manage Server: as AMS
-
-(Auth config repo) as ACR
-(Auth Service <AWS>) as AS
-
-Stuff --> ACR: edit
-Leader --> ACR: audit
-AB --> ACR: audit
-AB --> ACR: validate
-Operator --> ACR: accept merge
-
-AMS <-- ACR: load config
-AMS -up-> AS: update role config
-
-Stuff <-up- AS: authenticate
-@enduml
-```
-
-```puml
-@startuml
-'https://plantuml.com/sequence-diagram
-autonumber
-
-actor "Auth Service" as AS
-actor Stuff
-participant GIT
-actor "Audit Bot" as AB
-actor Leader
-actor Operator
-
-Stuff -> GIT: submit auth change request PR
-
-AB --> GIT: validate request
-AB -> GIT: check stuff, \nmake leader reviewer
-
-AB -> Leader: auth request\n notification
-
-Leader -> GIT: send '/approved'
-
-AB -> Operator: auth request\n notification
-Operator -> GIT: send '/continue'
-
-AB <- GIT: read changes,\n generate request
-AB -> AS: send change auth request
-AS -> Stuff: grant auth
-AS -> AB: operation success
-
-AB -> GIT: continue merge PR
-
-AB -> Stuff: authenticated notification
-@enduml
-```
+![sequence](sequence.png)
 
 ### The role of git in GBAM
 
