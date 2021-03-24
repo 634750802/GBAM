@@ -1,0 +1,32 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+autonumber
+
+actor "Auth Service" as AS
+actor Stuff
+participant GIT
+actor "Audit Bot" as AB
+actor Leader
+actor Operator
+
+Stuff -> GIT: submit auth change request PR
+
+AB --> GIT: validate request
+AB -> GIT: check stuff, \nmake leader reviewer
+
+AB -> Leader: auth request\n notification
+
+Leader -> GIT: send '/approved'
+
+AB -> Operator: auth request\n notification
+Operator -> GIT: send '/continue'
+
+AB <- GIT: read changes,\n generate request
+AB -> AS: send change auth request
+AS -> Stuff: grant auth
+AS -> AB: operation success
+
+AB -> GIT: continue merge PR
+
+AB -> Stuff: authenticated notification
+@enduml
